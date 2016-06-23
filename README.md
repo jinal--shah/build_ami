@@ -2,7 +2,7 @@
 
 _makefiles, packer json, scripts and assets to create a stack of amis_
 
-_ ... one day packer\_includes will be obsolete ..._
+_... one day packer\_includes will be obsolete ..._
 
 *This repo must not contain any product-specific stuff.*
 
