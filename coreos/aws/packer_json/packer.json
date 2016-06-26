@@ -4,10 +4,8 @@
     "ami_name": "{{env `AMI_NAME`}}",
     "ami_prefix": "{{env `AMI_PREFIX`}}",
     "ami_source_id": "{{env `AMI_SOURCE_ID`}}",
-    "aws_access_key_id": "{{env `AWS_ACCESS_KEY_ID`}}",
     "aws_instance_type": "{{env `AWS_INSTANCE_TYPE`}}",
     "aws_region": "{{env `AWS_DEFAULT_REGION`}}",
-    "aws_secret_access_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
     "aws_tag_ami_sources": "{{env `AWS_TAG_AMI_SOURCES`}}",
     "aws_tag_build_git_info": "{{env `AWS_TAG_BUILD_GIT_INFO`}}",
     "aws_tag_build_git_ref": "{{env `AWS_TAG_BUILD_GIT_REF`}}",
@@ -20,7 +18,6 @@
   "builders": [
     {
       "type": "amazon-ebs",
-      "access_key": "{{user `aws_access_key_id`}}",
       "ami_description": "{{user `ami_description`}}",
       "ami_name": "{{user `ami_name`}}",
       "force_deregister": "true",
@@ -31,7 +28,6 @@
         "volume_size": "8"
       }],
       "region": "{{user `aws_region`}}",
-      "secret_key": "{{user `aws_secret_access_key`}}",
       "source_ami": "{{user `ami_source_id`}}",
       "ssh_keypair_name": "{{user `ssh_keypair_name`}}",
       "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
@@ -76,8 +72,6 @@
       "type": "shell",
       "script": "build_ami/scripts/run_scripts.sh",
       "environment_vars": [
-        "AWS_ACCESS_KEY_ID={{user `aws_access_key_id`}}",
-        "AWS_SECRET_ACCESS_KEY={{user `aws_secret_access_key`}}",
         "AWS_DEFAULT_REGION={{user `aws_region`}}"
       ],
       "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E {{ .Path }}"
