@@ -69,24 +69,24 @@ valid_packer: ## run packer validate on packer json
 	@echo -e "\033[1;37mValidating Packer json: $(PACKER_JSON)\033[0m"
 	@PACKER_LOG=$(PACKER_LOG) packer validate "$(PACKER_JSON)"
 
-PIGT:=$(strip $(PACKER_INCLUDES_GIT_TAG))
-PIDIR:=$(CURDIR)/build_ami
+BAGT:=$(strip $(BUILD_AMI_GIT_TAG))
+BADIR:=$(CURDIR)/build_ami
 .PHONY: check_includes
 check_includes: ## check we use the desired packer_includes version
-	@if [[ -z "$(PIGT)" ]]; then                                                   \
+	@if [[ -z "$(BAGT)" ]]; then                                                   \
 	    echo "... packer_includes git tag not given. Skipping check";              \
 	else                                                                           \
-	    echo -e "\033[1;37mChecking $(PIDIR) version: $(PIGT)\033[0m";             \
-	    [[ -d $(PIDIR) ]]                                                          \
-	    && cd $(PIDIR)                                                             \
-	    && [[ $$(git describe --tags --match [0-9]*.[0-9]*.[0-9]*) == "$(PIGT)" ]] \
-	    && echo "... using version: $(PIGT)";                                      \
+	    echo -e "\033[1;37mChecking $(BADIR) version: $(BAGT)\033[0m";             \
+	    [[ -d $(BADIR) ]]                                                          \
+	    && cd $(BADIR)                                                             \
+	    && [[ $$(git describe --tags --match [0-9]*.[0-9]*.[0-9]*) == "$(BAGT)" ]] \
+	    && echo "... using version: $(BAGT)";                                      \
 	fi
 
 # Local uncommitted changes to a repo mess up the audit trail
 # as the the commit ref or tag will not represent the state of 
 # the files being used for the build. So we say NO, SIR OR MADAM, NOT TODAY!
-PIDIR:=$(CURDIR)/packer_includes
+BADIR:=$(CURDIR)/packer_includes
 .PHONY: check_for_changes
 check_for_changes: ## check project_dir and packer_includes for uncommitted changes.
 	@echo -e "\033[1;37mChecking for uncommitted changes in $(CURDIR)\033[0m"
@@ -98,13 +98,13 @@ check_for_changes: ## check project_dir and packer_includes for uncommitted chan
 	    echo "... Commit them (tag the commit if wanted), then build."; \
 	    exit 1;                                                         \
 	fi;
-	@echo -e "\033[1;37mChecking for uncommitted changes in $(PIDIR)\033[0m"
-	@cd $(PIDIR)                                                        \
+	@echo -e "\033[1;37mChecking for uncommitted changes in $(BADIR)\033[0m"
+	@cd $(BADIR)                                                        \
 	&& if git diff-index --quiet HEAD -- ;                              \
 	then                                                                \
 	    echo "... none found.";                                         \
 	else                                                                \
-	    echo -e "\033[0;31m[ERROR] local changes in $(PIDIR)\033[0m";   \
+	    echo -e "\033[0;31m[ERROR] local changes in $(BADIR)\033[0m";   \
 	    echo "... Commit them (tag the commit if wanted), then build."; \
 	    exit 1;                                                         \
 	fi;

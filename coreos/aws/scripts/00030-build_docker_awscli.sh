@@ -11,7 +11,7 @@
 #     root user's home dirs.
 #
 IMG_DIR=uploads/docker/awscli
-AWS_REGION=eu-west-1
+export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-eu-west-1}
 
 if [[ ! -r $IMG_DIR/Dockerfile ]]; then
     echo "$0 ERROR: Dockerfile not found in $IMG_DIR. Nothing to build!"

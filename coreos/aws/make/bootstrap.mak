@@ -1,6 +1,7 @@
 # vim: ts=4 st=4 sr noet smartindent syntax=make ft=make:
 #
-ARTEFACT_TYPE:=base
+AMI_LAYER:=primary
+LAYER_NAME:=aws
 
 # ### MANDATORY_VARS
 # put custom overrides or additions in current project in mandatory_vars.mak
