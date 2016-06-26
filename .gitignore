@@ -5,6 +5,7 @@
 **/get-pip.py
 # ... if user storing vars or creds to export to run make locally
 **/*.pem
+**/.aws
 .env_vars
 
 # ... ignore the assets from the build process

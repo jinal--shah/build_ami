@@ -8,7 +8,7 @@ help: ## Run to show available make targets and descriptions
 	@grep -E '^[-a-zA-Z_: ]+:.*?## .*' $(MAKEFILE_LIST)             \
 	| sed -e "s/^\([^:]\+\):\([^:]\+\):\([^#]*\)##\(.*\)/\1 \2 \4/" \
 	| awk '{                                                        \
-	    printf "\033[36m%-45s:\033[0m \033[1;36m%-15s\033[0m ",     \
+	    printf "\033[36m%-45s:\033[0m \033[1;36m%-17s\033[0m ",     \
 	        $$1, $$2; $$1=$$2="";                                   \
 	    print $$0;                                                  \
 	}';
@@ -38,8 +38,16 @@ print_vars: ## show assigned values and src of all env_vars e.g. file or env
 	@echo -e "\033[1;37mOUTPUT: VAR=VALUE (value or code-snippet): source\033[0m"
 	@echo -e "\033[1;37mRun 'make -r --print-data-base' for more debug.\033[0m"
 
-# ... PREREQS TARGETS
+# ... CLEAN TARGETS
+.PHONY: clean_aws_creds
+clean_aws_creds: ## delete temporary aws creds
+	@rm -rf $(AWS_CREDS_TMP) 2>/dev/null
 
+.PHONY: clean_build_libs
+clean_build_libs: ## delete cloned build-libs
+	@rm -rf $(BUILD_AMI_LIB_DIR)
+
+# ... PREREQS TARGETS
 .PHONY: sshkeyfile
 sshkeyfile: ## Symlink local sshkey to directory to use in Packer
 	@if [ -f ./$(SSH_PRIVATE_KEY_FILE) ];                                     \
@@ -52,6 +60,43 @@ sshkeyfile: ## Symlink local sshkey to directory to use in Packer
 	    echo -e "\033[0;31m[ERROR] Create a copy of sshkey in $(CURDIR)";     \
 	    echo -e "(or symlink): e.g ./$(SSH_PRIVATE_KEY_FILE)\e[0m\n";         \
 	    exit 1;                                                               \
+	fi;
+
+# ... cloning the repo that has this target only makes sense
+#     if you run the clean target first (otherwise you'd be trashing the file
+#     that contains this code that tells make what to clone ...)
+BADIR:=$(BUILD_AMI_LIB_DIR)
+BAGB:=$(BUILD_AMI_GIT_BRANCH)
+BAGR:=$(BUILD_AMI_GIT_REPO)
+BAGT:=$(BUILD_AMI_GIT_TAG)
+.PHONY: get_build_libs
+get_build_libs: ## fetch build_ami libs from github
+	@if [[ ! -e "$(BADIR)" ]]; then                                     \
+	    echo -e "\033[1;37m$(BADIR) doesn't exist - cloning.\033[0m"    \
+	    && git clone --branch $(BAGB) $(BAGR) $(BADIR)                  \
+	    && cd $(BADIR)                                                  \
+	    && [[ -z "$(BAGT)" ]]                                           \
+	    || echo -e "\033[1;37mchecking out tag $(BAGT)\033[0m"          \
+	    && git checkout $(BAGT);                                        \
+	else                                                                \
+	    echo -e "\033[1;37m... $(BADIR) already exists.\033[0m"         \
+	    && echo -e "\033[1;37mRun 'make clean' to start fresh.\033[0m"; \
+	fi;
+
+.PHONY: copy_aws_creds
+copy_aws_creds: ## make user's aws creds available to packer during build
+	@if [[ ! -e "$(AWS_CREDS_TMP)" ]]; then                               \
+	    if [[ -r $(AWS_CREDS) ]]; then                                    \
+	        echo -e "\033[1;37mcopying $(AWS_CREDS) for upload .\033[0m"; \
+	        mkdir -p uploads 2>/dev/null;                                 \
+	        cp -aR $(AWS_CREDS) $(AWS_CREDS_TMP);                         \
+	    else                                                              \
+	        echo -e "\033[1;37m... $(AWS_CREDS) creds not found.\033[0m"; \
+	        echo -e "\033[1;37mDoes the packer build needs them?\033[0m"; \
+	    fi;                                                               \
+	else                                                                  \
+	    echo -e "\033[1;37m... $(AWS_CREDS_TMP) already exists.\033[0m";  \
+	    echo -e "\033[1;37mRun 'make clean' to start fresh.\033[0m";      \
 	fi;
 
 # ... VALIDATION TARGETS
@@ -70,7 +115,7 @@ valid_packer: ## run packer validate on packer json
 	@PACKER_LOG=$(PACKER_LOG) packer validate "$(PACKER_JSON)"
 
 BAGT:=$(strip $(BUILD_AMI_GIT_TAG))
-BADIR:=$(CURDIR)/build_ami
+BADIR:=$(BUILD_AMI_LIB_DIR)
 .PHONY: check_includes
 check_includes: ## check we use the desired build_ami version
 	@if [[ -z "$(BAGT)" ]]; then                                                   \
@@ -86,7 +131,7 @@ check_includes: ## check we use the desired build_ami version
 # Local uncommitted changes to a repo mess up the audit trail
 # as the the commit ref or tag will not represent the state of 
 # the files being used for the build. So we say NO, SIR OR MADAM, NOT TODAY!
-BADIR:=$(CURDIR)/build_ami
+BADIR:=$(BUILD_AMI_LIB_DIR)
 .PHONY: check_for_changes
 check_for_changes: ## check project_dir and build_ami for uncommitted changes.
 	@echo -e "\033[1;37mChecking for uncommitted changes in $(CURDIR)\033[0m"
