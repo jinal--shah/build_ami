@@ -8,7 +8,7 @@ clean: ## delete build assets
 	@rm -rf $(BADIR)
 
 .PHONY: prereqs
-prereqs: sshkeyfile get_build_ami ## set up build env
+prereqs: sshkeyfile get_build_ami_libs ## set up build env
 
 .PHONY: validate
 validate: check_vars check_includes check_for_changes valid_packer ## check build env is sane
@@ -20,8 +20,8 @@ build: prereqs validate ## run prereqs, validate then build.
 # ... cloning the repo that has this target only makes sense
 #     if you run the clean target first (otherwise you'd be trashing the file
 #     that contains this code that tells make what to clone ...)
-.PHONY: get_build_ami
-get_build_ami: ## fetch build_ami libs from github
+.PHONY: get_build_ami_libs
+get_build_ami_libs: ## fetch build_ami libs from github
 	@if [[ ! -e "$(BADIR)" ]]; then                                     \
 	    echo -e "\033[1;37m$(BADIR) doesn't exist - cloning.\033[0m"    \
 	    && git clone --branch $(BAGB) $(BAGR) $(BADIR)                  \
