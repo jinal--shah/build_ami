@@ -1,9 +1,13 @@
+# ... lib dirs (cloned BEFORE any makefile targets invoked)
+**/build_ami
+
 # ... if user installed pip locally
 **/get-pip.py
-# ... if user storing vars to export to run make locally
+# ... if user storing vars or creds to export to run make locally
+**/*.pem
 .env_vars
 
 # ... ignore the assets from the build process
-**/*.pem
 **/*.gz
 **/*.swp
+

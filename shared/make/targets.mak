@@ -72,9 +72,9 @@ valid_packer: ## run packer validate on packer json
 BAGT:=$(strip $(BUILD_AMI_GIT_TAG))
 BADIR:=$(CURDIR)/build_ami
 .PHONY: check_includes
-check_includes: ## check we use the desired packer_includes version
+check_includes: ## check we use the desired build_ami version
 	@if [[ -z "$(BAGT)" ]]; then                                                   \
-	    echo "... packer_includes git tag not given. Skipping check";              \
+	    echo "... build_ami git tag not given. Skipping check";                    \
 	else                                                                           \
 	    echo -e "\033[1;37mChecking $(BADIR) version: $(BAGT)\033[0m";             \
 	    [[ -d $(BADIR) ]]                                                          \
@@ -86,9 +86,9 @@ check_includes: ## check we use the desired packer_includes version
 # Local uncommitted changes to a repo mess up the audit trail
 # as the the commit ref or tag will not represent the state of 
 # the files being used for the build. So we say NO, SIR OR MADAM, NOT TODAY!
-BADIR:=$(CURDIR)/packer_includes
+BADIR:=$(CURDIR)/build_ami
 .PHONY: check_for_changes
-check_for_changes: ## check project_dir and packer_includes for uncommitted changes.
+check_for_changes: ## check project_dir and build_ami for uncommitted changes.
 	@echo -e "\033[1;37mChecking for uncommitted changes in $(CURDIR)\033[0m"
 	@if git diff-index --quiet HEAD -- ;                                \
 	then                                                                \
