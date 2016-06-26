@@ -7,7 +7,7 @@ export AMI_SOURCE_ID?=$(shell                                      \
 	          'Name=virtualization-type,Values=$(AMI_VTYPE)'       \
 	--query 'Images[*].[ImageId,CreationDate]'                     \
 	--output text                                                  \
-	| sort -k2 | tail -1 | awk {'print $$1'}                       \ 
+	| sort -k2 | tail -1 | awk {'print $$1'}                       \
 )
 # ... AMI_PREVIOUS_SOURCES is used to show provenance of this ami.
 # i.e. it would list the ancestors of this ami's source.

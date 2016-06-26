@@ -28,7 +28,7 @@ include build_ami/shared/make/custom_file.mak
 # put custom overrides or additions in current project in generated_vars.mak
 CUSTOM_FILE:=generated_vars.mak
 include build_ami/shared/make/generated_vars.mak
-include build_ami/shared/make/generated_vars-$(AMI_LAYER)_layer.mak
+include build_ami/shared/make/generated_vars-ami_source-$(AMI_LAYER)_layer.mak
 include build_ami/$(LAYER_OS)/$(LAYER_NAME)/make/generated_vars.mak
 include build_ami/shared/make/custom_file.mak
 
