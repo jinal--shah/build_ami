@@ -75,6 +75,13 @@
         "AWS_DEFAULT_REGION={{user `aws_region`}}"
       ],
       "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E {{ .Path }}"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "# THINGS TO DO LAST OF ALL: clean up /tmp",
+        "sudo rm -f /tmp/{uploads,scripts}"
+      ]
     }
   ],
 
