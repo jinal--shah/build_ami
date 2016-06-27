@@ -10,7 +10,7 @@
 # ... adds an alias to the .alias dir under core and
 #     root user's home dirs.
 #
-IMG_DIR=uploads/docker/awscli
+IMG_DIR=/tmp/uploads/docker/awscli
 export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-eu-west-1}
 
 if [[ ! -r $IMG_DIR/Dockerfile ]]; then
