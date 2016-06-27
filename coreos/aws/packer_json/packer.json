@@ -50,7 +50,7 @@
       "inline": [
         "# THINGS TO DO FIRST OF ALL: create tmp dirs on remote",
         "sudo mkdir /tmp/{uploads,scripts}",
-        "chown {{user `ssh_username`}} /tmp/{uploads,scripts}"
+        "sudo chown {{user `ssh_username`}} /tmp/{uploads,scripts}"
       ]
     },
     {
