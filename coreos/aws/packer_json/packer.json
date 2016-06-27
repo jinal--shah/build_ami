@@ -80,7 +80,7 @@
       "type": "shell",
       "inline": [
         "# THINGS TO DO LAST OF ALL: clean up /tmp",
-        "sudo rm -f /tmp/{uploads,scripts}"
+        "sudo rm -rf /tmp/{uploads,scripts} || true"
       ]
     }
   ],
