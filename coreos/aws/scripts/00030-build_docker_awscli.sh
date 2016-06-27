@@ -50,7 +50,7 @@ echo "$0 INFO: sourcing alias to test ..."
 shopt -s expand_aliases
 . $alias_file # sourcing the last alias file created ...
 
-if ! $VERIFY_CMD
+if ! eval $VERIFY_CMD
 then
     echo "$0 ERROR: $CMD alias does not work ..."
     echo "          ... See ERROR messages above." >&2
