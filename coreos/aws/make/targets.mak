@@ -3,7 +3,7 @@
 clean: clean_aws_creds clean_build_libs ## delete build assets
 
 .PHONY: prereqs
-prereqs: sshkeyfile get_build_libs ## set up build env
+prereqs: sshkeyfile copy_aws_creds get_build_libs ## set up build env
 
 .PHONY: validate
 validate: check_vars check_includes check_for_changes valid_packer ## check build env is sane
