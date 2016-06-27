@@ -23,7 +23,7 @@
       "force_deregister": "true",
       "instance_type": "{{user `aws_instance_type`}}",
       "launch_block_device_mappings": [{
-        "device_name": "/dev/sda1",
+        "device_name": "/dev/xvda",
         "delete_on_termination": true,
         "volume_size": "8"
       }],
