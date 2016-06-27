@@ -30,6 +30,8 @@ include build_ami/shared/make/custom_file.mak
 CUSTOM_FILE:=generated_vars.mak
 include build_ami/shared/make/generated_vars.mak
 include build_ami/shared/make/generated_vars-ami_source-$(AMI_LAYER)_layer.mak
+# ... aws tag values require ami_source values to be determined first.
+include build_ami/shared/make/generated_vars-aws_tags.mak
 include build_ami/$(LAYER_OS)/$(LAYER_NAME)/make/generated_vars.mak
 include build_ami/shared/make/custom_file.mak
 
