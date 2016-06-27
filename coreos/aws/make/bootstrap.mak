@@ -1,8 +1,9 @@
 # vim: ts=4 st=4 sr noet smartindent syntax=make ft=make:
 #
+# ... AMI CHARACTER
 AMI_LAYER:=primary
-LAYER_OS:=coreos
 LAYER_NAME:=aws
+LAYER_OS:=coreos
 
 # ### MANDATORY_VARS
 # put custom overrides or additions in current project in mandatory_vars.mak
