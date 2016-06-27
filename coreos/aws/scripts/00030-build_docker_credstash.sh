@@ -1,19 +1,19 @@
 #!/bin/bash
 # vim: et sr sw=4 ts=4 smartindent:
 #
-# 00030-build_docker_awscli.sh
+# 00030-build_docker_credstash.sh
 #
 # We need to install this image locally to get the
-# creds to pull other images from ECR.
+# creds from KMS
 #
-# ... builds docker container to provide awscli.
+# ... builds docker container to provide credstash.
 # ... adds an alias to the .alias dir under core and
 #     root user's home dirs.
 #
-CMD="aws" # the docker ENTRYPOINT or CMD
-IMG_NAME=awscli
+CMD="credstash" # the docker ENTRYPOINT or CMD
+IMG_NAME=credstash
 IMG_DIR=/tmp/uploads/docker/$IMG_NAME
-VERIFY_CMD="$CMD --version >/dev/null 2>&1"
+VERIFY_CMD="$CMD -h >/dev/null 2>&1"
 
 export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-eu-west-1}
 
