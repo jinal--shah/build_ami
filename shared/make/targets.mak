@@ -154,3 +154,29 @@ check_for_changes: ## check project_dir and build_ami for uncommitted changes.
 	    exit 1;                                                         \
 	fi;
 
+.PHONY: no_detached_head
+no_detached_head: ## FOR GOOD REASONS, we don't allow building on a tag
+	@echo -e "\033[1;37mChecking we have checked out an actual branch\033[0m";
+	@if git branch -l | grep 'detached at';                             \
+	then                                                                \
+	    echo -e "\033[0;31m[ERROR] we are checked out on a tag\033[0m"; \
+	    exit 1;                                                         \
+	else                                                                \
+	    echo -e "... A-OK.";                                            \
+	fi;
+
+# ... BUILD TARGETS
+.PHONY: tag_project
+tag_project: ## removes any tags on HEAD not in remote and tags with timestamp
+	@echo -e "\033[1;37mRemoving any current tags on HEAD not in remote\033[0m"
+	@git fetch --prune origin +refs/tags/*:refs/tags/*
+	@echo -e "\033[1;37m... adding new tag $(BUILD_GIT_TAG)\033[0m"
+	@git tag -a "$(BUILD_GIT_TAG)" -m "$(AUDIT_MSG)"
+	@if git describe --tags --match "$(BUILD_GIT_TAG)";                       \
+	then                                                                      \
+	    echo -e "... local repo tagged $(BUILD_GIT_TAG)";                     \
+	else                                                                      \
+	    echo -e "\033[0;31m[ERROR] tag $(BUILD_GIT_TAG) not applied.\033[0m"; \
+	    exit 1;                                                               \
+	fi;
+

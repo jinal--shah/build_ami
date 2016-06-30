@@ -1,5 +1,15 @@
 # vim: ts=4 st=4 sr noet smartindent:
 #
+
+# ... AUDIT_MSG: used in annotation in git tag
+# If built with Jenkins, BUILD_URL is defined.
+ifeq ($(BUILD_URL),)
+	AUDIT_MSG=$(shell git config user.name)@$(HOSTNAME)
+else
+	AUDIT_MSG=$(BUILD_URL)
+endif
+export AUDIT_MSG
+
 # ... PACKER_JSON
 # - looks in order of precedence and uses the first of:
 # 1. project working dir (where you git-clone build_ami.git):
@@ -40,29 +50,17 @@ endif
 
 export PACKER_JSON
 
+export BUILD_TIME:=$(shell date +%Y%m%d%H%M%S)
+
 # BUILD_GIT_*: used to AWS-tag the built AMI, and generate its unique name
 #              so we can trace its provenance later.
 #
 # ... to rebuild using same version of tools, we can't trust the git tag
 # but the branch, sha and repo, because git tags are mutable and movable.
 # We expect the version tag to fit the x.y.z semver format
-export BUILD_GIT_TAG:=$(shell \
-	git describe                 \
-	--exact-match HEAD           \
-	--match [0-9]*.[0-9]*.[0-9]* \
-	2>/dev/null                  \
-)
-ifeq ($(BUILD_GIT_TAG),)
-	export BUILD_GIT_BRANCH:=$(shell \
-	    git describe                 \
-	    --contains --all             \
-	    --match [0-9]*.[0-9]*.[0-9]* \
-	    HEAD                         \
-	)
-else
-	export EUROSTAR_BUILD_VERSION:=$(BUILD_GIT_TAG)
-	export BUILD_GIT_BRANCH:=detached_head
-endif
+export BUILD_GIT_TAG:=$(BUILD_TIME)
+export BUILD_GIT_BRANCH:=$(shell git rev-parse --abbrev-ref HEAD)
+
 export BUILD_GIT_SHA:=$(shell git rev-parse --short=$(GIT_SHA_LEN) --verify HEAD)
 export BUILD_GIT_REPO:=$(shell \
 	git remote show -n origin  \
@@ -75,7 +73,10 @@ export BUILD_GIT_ORG:=$(shell            \
 	| sed -e 's!.*[:/]\([^/]\+\)/.*!\1!' \
 )
 
-export BUILD_TIME:=$(shell date +%Y%m%d%H%M%S)
+# EUROSTAR_BUILD_VERSION
+# This is always set to current build time
+#
+export EUROSTAR_BUILD_VERSION:=$(BUILD_TIME)
 
 export AMI_OS_INFO=$(AMI_OS)-$(AMI_OS_RELEASE)
 
