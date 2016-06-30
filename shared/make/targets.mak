@@ -48,6 +48,29 @@ clean_build_libs: ## delete cloned build-libs
 	@rm -rf $(BUILD_AMI_LIB_DIR)
 
 # ... PREREQS TARGETS
+.PHONY: no_detached_head
+no_detached_head: ## FOR GOOD REASONS, we don't allow building on a tag
+	@echo -e "\033[1;37mChecking we have checked out an actual branch\033[0m";
+	@if git branch -l | grep 'detached at';                             \
+	then                                                                \
+	    echo -e "\033[0;31m[ERROR] we are checked out on a tag\033[0m"; \
+	    exit 1;                                                         \
+	else                                                                \
+	    echo -e "... A-OK.";                                            \
+	fi;
+
+.PHONY: sha_in_origin
+sha_in_origin: ## if sha is not in origin, we shouldn't build.
+	@echo -e "\033[1;37mChecking sha $(BUILD_GIT_SHA) exists in origin\033[0m";
+	if [[ -z "$(shell git branch -r --contains $(BUILD_GIT_SHA) 2>/dev/null)" ]]; \
+	then                                                                          \
+	    echo -e "\033[0;31m[ERROR]This commit does not exist on origin.\033[0m";  \
+	    echo -e "\033[0;31mDid you push these changes / branch?\033[0m";          \
+	    exit 1;                                                                   \
+	else                                                                          \
+	    echo -e "... All looking copacetic.";                                     \
+	fi;
+
 .PHONY: sshkeyfile
 sshkeyfile: ## Symlink local sshkey to directory to use in Packer
 	@if [ -f ./$(SSH_PRIVATE_KEY_FILE) ];                                     \
@@ -154,17 +177,6 @@ check_for_changes: ## check project_dir and build_ami for uncommitted changes.
 	    exit 1;                                                         \
 	fi;
 
-.PHONY: no_detached_head
-no_detached_head: ## FOR GOOD REASONS, we don't allow building on a tag
-	@echo -e "\033[1;37mChecking we have checked out an actual branch\033[0m";
-	@if git branch -l | grep 'detached at';                             \
-	then                                                                \
-	    echo -e "\033[0;31m[ERROR] we are checked out on a tag\033[0m"; \
-	    exit 1;                                                         \
-	else                                                                \
-	    echo -e "... A-OK.";                                            \
-	fi;
-
 # ... BUILD TARGETS
 .PHONY: tag_project
 tag_project: ## removes any tags on HEAD not in remote and tags with timestamp
@@ -178,5 +190,20 @@ tag_project: ## removes any tags on HEAD not in remote and tags with timestamp
 	else                                                                      \
 	    echo -e "\033[0;31m[ERROR] tag $(BUILD_GIT_TAG) not applied.\033[0m"; \
 	    exit 1;                                                               \
+	fi;
+
+.PHONY: run_packer
+run_packer: ## invoke Packer build
+	@PACKER_LOG=$(PACKER_LOG) packer build $(PACKER_DEBUG) "$(PACKER_JSON)"
+
+.PHONY: push_tags
+push_tags: ## push project git tag to repo
+	@if git push --tags;                                                            \
+	then                                                                            \
+	    echo -e "... pushed  git tags to remote origin";                            \
+	else                                                                            \
+	    echo -e "\033[0;31m[ERROR] couldn't push git tags.";                        \
+	    echo -e "You MUST push the tag manually on commit $(BUILD_GIT_SHA)\033[0m"; \
+	    exit 1;
 	fi;
 
