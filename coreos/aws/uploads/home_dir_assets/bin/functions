@@ -1,0 +1,44 @@
+# vim: et sr sw=4 ts=4 smartindent syntax=sh:
+# ... to be sourced
+#
+# - makes our custom cmd aliases available
+# - creates eurostar dir if it doesn't exist
+# - sets our key=val info files (e.g. instance_info) in script env
+# - provides utility functions to:
+#   - check required vars or fail.
+#   - get value from kms
+if . ~/.alias/* && shopt -s expand_aliases
+then
+    echo "$0 INFO: ... sourced available aliases for docker cmds"
+else
+    echo "$0 ERROR: could not source or expand aliases"
+    exit 1
+fi
+
+if [[ -r /etc/eurostar/instance_info ]]; then
+    echo "$0 INFO: ... reading instance info"
+    . /etc/eurostar/instance_info
+fi
+
+function check_var_defined() {
+    var_name="$1"
+    var_val="${!var_name}"
+    if [[ -z $var_val ]]; then
+        return 1
+    fi
+}
+
+function required_vars() {
+    rc=0
+    required_vars="$1"
+    for this_var in $required_vars; do
+        if ! check_var_defined $this_var
+        then
+            echo "$0 ERROR: You must pass \$$var_name to this script" >&2
+            rc=1
+        fi
+    done
+
+    return $rc
+}
+

@@ -9,3 +9,6 @@ for user in $USERS; do
     mkdir -p $home_dir/.alias
     chown $user:$primary_group $home_dir/.alias
 done
+
+mkdir -p /etc/eurostar
+chown core:core /etc/eurostar

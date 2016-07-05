@@ -16,3 +16,5 @@ if [[ -d $dir_aliases ]]; then
         . $dir_profiles/$script
     done
 fi
+
+export PATH=$PATH:$HOME/bin

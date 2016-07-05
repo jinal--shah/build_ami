@@ -1,0 +1,10 @@
+[Unit]
+Description=Run ecr_login every 6 hours
+
+[Timer]
+OnUnitActiveSec=6h
+OnBootSec=10s
+Persistent=true
+
+[Install]
+WantedBy=multi-user.target

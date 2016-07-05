@@ -26,14 +26,25 @@ pushd $IMG_DIR
 
 IMG_NAME=$(grep '^LABEL ' ./Dockerfile | sed -e 's/.*Name="\([^"]\+\).*/\1/')
 TAG_VERSION=$(grep '^LABEL ' ./Dockerfile | sed -e 's/.*Version="\([^"]\+\).*/\1/')
+TAGGED_IMG=$IMG_NAME:$TAG_VERSION
 echo "$0 INFO: ... building $IMG_NAME docker image $IMG_NAME:$TAG_VERSION"
-if ! docker build --no-cache=true --rm --tag $IMG_NAME:$TAG_VERSION .
+if ! docker build --no-cache=true --rm --tag $TAGGED_IMG .
 then
-    echo "$0 ERROR: unable to build $IMG_NAME:$TAG_VERSION"
+    echo "$0 ERROR: unable to build $TAGGED_IMG"
     exit 1
 fi
 
-ALIAS="alias $CMD='docker run --name $IMG_NAME --rm $IMG_NAME:$TAG_VERSION'"
+ALIAS="
+alias $CMD='docker run --name $IMG_NAME --rm $TAGGED_IMG'
+
+# d_$CMD: user can specify docker container name as first arg.
+function d_aws() {
+    container_name=\"\$1\"
+    shift
+    cmd_args=\"\$@\"
+    docker run --name \$container_name --rm $TAGGED_IMG \$cmd_args
+}
+"
 
 USERS="root core"
 echo "$0 INFO: creating alias '$CMD' in \$HOME/.alias dir for users $USERS"
@@ -42,7 +53,7 @@ for user in $USERS; do
     home_dir=$(eval echo "~$user")
     primary_group=$(id -gn $user)
     alias_file=$home_dir/.alias/$IMG_NAME
-    echo $ALIAS > $alias_file
+    echo "$ALIAS" > $alias_file
 done
 
 echo "$0 INFO: sourcing alias to test ..."

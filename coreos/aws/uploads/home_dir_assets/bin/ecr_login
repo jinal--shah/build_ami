@@ -1,0 +1,21 @@
+#!/bin/bash
+# vim: et sr sw=4 ts=4 smartindent syntax=sh:
+#
+# ecr_login
+#
+
+if ! . ~/bin/functions
+then
+    echo "$0 ERROR: couldn't source custom shell functions [~/bin/functions]"
+    exit 1
+fi
+
+required_vars AWS_DEFAULT_REGION
+
+DOCKER_CFG=~/.docker/config.json
+if [[ -e $DOCKER_CFG ]]; then
+    mv $DOCKER_CFG $DOCKER_CFG.moved_by_ecr_login
+fi
+
+$(d_aws ecr_login ecr --region $AWS_DEFAULT_REGION get-login)
+

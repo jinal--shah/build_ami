@@ -1,0 +1,14 @@
+[Unit]
+Description=Get instance info from ec2 metadata and tag api
+After=docker.service,docker.socket
+
+[Service]
+Type=oneshot
+ExecStart=/home/core/bin/instance_info
+Requires=docker.service,docker.socket
+TimeoutSec=15
+User=core
+
+[Install]
+WantedBy=multi-user.target
+
