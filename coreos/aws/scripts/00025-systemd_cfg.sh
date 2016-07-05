@@ -17,5 +17,5 @@ if [[ ! -d $TMP_DIR ]]; then
     exit 1
 fi
 
-cp -r $TMP_DIR/* $SYSTEMD_DIR
+cp -r $TMP_DIR/* /
 
