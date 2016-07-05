@@ -62,13 +62,13 @@ no_detached_head: ## FOR GOOD REASONS, we don't allow building on a tag
 .PHONY: sha_in_origin
 sha_in_origin: ## if sha is not in origin, we shouldn't build.
 	@echo -e "\033[1;37mChecking sha $(BUILD_GIT_SHA) exists in origin\033[0m";
-	if [[ -z "$(shell git branch -r --contains $(BUILD_GIT_SHA) 2>/dev/null)" ]]; \
-	then                                                                          \
-	    echo -e "\033[0;31m[ERROR]This commit does not exist on origin.\033[0m";  \
-	    echo -e "\033[0;31mDid you push these changes / branch?\033[0m";          \
-	    exit 1;                                                                   \
-	else                                                                          \
-	    echo -e "... All looking copacetic.";                                     \
+	@if [[ -z "$(shell git branch -r --contains $(BUILD_GIT_SHA) 2>/dev/null)" ]]; \
+	then                                                                           \
+	    echo -e "\033[0;31m[ERROR]This commit does not exist on origin.\033[0m";   \
+	    echo -e "\033[0;31mDid you push these changes / branch?\033[0m";           \
+	    exit 1;                                                                    \
+	else                                                                           \
+	    echo -e "... All looking copacetic.";                                      \
 	fi;
 
 .PHONY: sshkeyfile
