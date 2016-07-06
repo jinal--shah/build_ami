@@ -183,7 +183,9 @@ tag_project: ## removes any tags on HEAD not in remote and tags with timestamp
 	@echo -e "\033[1;37mRemoving any current tags on HEAD not in remote\033[0m"
 	@git fetch --prune origin +refs/tags/*:refs/tags/*
 	@echo -e "\033[1;37m... adding new tag $(BUILD_GIT_TAG)\033[0m"
-	@git tag -a "$(BUILD_GIT_TAG)" -m "$(AUDIT_MSG)"
+	@git tag -a "$(BUILD_GIT_TAG)" \
+	         -m "$(AUDIT_MSG)"     \
+	         -m "$(AMI_NAME)"
 	@if git describe --tags --match "$(BUILD_GIT_TAG)";                       \
 	then                                                                      \
 	    echo -e "... local repo tagged $(BUILD_GIT_TAG)";                     \
