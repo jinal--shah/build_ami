@@ -36,15 +36,15 @@ then
     exit 1
 fi
 
+echo "$0 INFO: ... tagging image $TAG_VERSION as stable"
+docker tag $TAGGED_IMG $IMG_NAME:stable
+
 if ! eval $VERIFY_CMD
 then
     echo "$0 ERROR: $CMD does not work ..."
     echo "          ... See ERROR messages above." >&2
     exit 1
 fi
-
-echo "$0 INFO: ... tagging image $TAG_VERSION as stable"
-docker tag $TAGGED_IMG $IMG_NAME:stable
 
 popd
 
