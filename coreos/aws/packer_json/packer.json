@@ -34,6 +34,7 @@
       "ssh_pty" : "true",
       "ssh_username": "{{user `ssh_username`}}",
       "tags": {
+        "Name": "{{user `ami_name`}}",
         "ami_sources": "{{user `aws_tag_ami_sources`}}",
         "build_git_info": "{{user `aws_tag_build_git_info`}}",
         "build_git_ref": "{{user `aws_tag_build_git_ref`}}",

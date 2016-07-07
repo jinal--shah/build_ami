@@ -185,7 +185,7 @@ tag_project: ## removes any tags on HEAD not in remote and tags with timestamp
 	@echo -e "\033[1;37m... adding new tag $(BUILD_GIT_TAG)\033[0m"
 	@git tag -a "$(BUILD_GIT_TAG)" \
 	         -m "$(AUDIT_MSG)"     \
-	         -m "$(AMI_NAME)"
+	         -m "ami_name: $(AMI_NAME)"
 	@if git describe --tags --match "$(BUILD_GIT_TAG)";                       \
 	then                                                                      \
 	    echo -e "... local repo tagged $(BUILD_GIT_TAG)";                     \
@@ -206,6 +206,6 @@ push_tags: ## push project git tag to repo
 	else                                                                            \
 	    echo -e "\033[0;31m[ERROR] couldn't push git tags.";                        \
 	    echo -e "You MUST push the tag manually on commit $(BUILD_GIT_SHA)\033[0m"; \
-	    exit 1;
+	    exit 1;                                                                     \
 	fi;
 
