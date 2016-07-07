@@ -20,6 +20,7 @@
       "type": "amazon-ebs",
       "ami_description": "{{user `ami_description`}}",
       "ami_name": "{{user `ami_name`}}",
+      "iam_instance_profile": "responsive-jenkins-dev",
       "force_deregister": "true",
       "instance_type": "{{user `aws_instance_type`}}",
       "launch_block_device_mappings": [{
