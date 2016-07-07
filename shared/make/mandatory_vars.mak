@@ -14,4 +14,5 @@ export MANDATORY_VARS+= \
 	BUILD_TIME         \
 	LAYER_NAME         \
 	LAYER_OS           \
-	PACKER_DIR
+	PACKER_DIR         \
+	PACKER_IAM_INSTANCE_PROFILE
