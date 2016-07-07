@@ -1,19 +1,13 @@
 # vim: et sr sw=4 ts=4 smartindent syntax=sh:
 # ... to be sourced
 #
-# - makes our custom cmd aliases available
 # - creates eurostar dir if it doesn't exist
 # - sets our key=val info files (e.g. instance_info) in script env
 # - provides utility functions to:
 #   - check required vars or fail.
 #   - get value from kms
-if . ~/.alias/* && shopt -s expand_aliases
-then
-    echo "$0 INFO: ... sourced available aliases for docker cmds"
-else
-    echo "$0 ERROR: could not source or expand aliases"
-    exit 1
-fi
+#
+export PATH="$PATH:$HOME/bin"
 
 if [[ -r /etc/eurostar/instance_info ]]; then
     echo "$0 INFO: ... reading instance info"
@@ -40,5 +34,19 @@ function required_vars() {
     done
 
     return $rc
+}
+
+# container_as_cmd():
+# runs docker container to emulate cmd
+# ... requires env vars to be set:
+#     CONTAINER_NAME: name to give container
+#     TAGGED_IMG: name of img to run
+function container_as_cmd() {
+
+    cmd_args="$@"
+    sudo docker kill $CONTAINER_NAME >/dev/null 2>&1
+    sudo docker rm -f $CONTAINER_NAME >/dev/null 2>&1 
+
+    sudo docker run --name $CONTAINER_NAME --rm $TAGGED_IMG $cmd_args
 }
 

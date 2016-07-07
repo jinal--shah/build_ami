@@ -34,39 +34,15 @@ then
     exit 1
 fi
 
-ALIAS="
-alias $CMD='docker run --name $IMG_NAME --rm $TAGGED_IMG'
-
-# d_$CMD: user can specify docker container name as first arg.
-function d_aws() {
-    container_name=\"\$1\"
-    shift
-    cmd_args=\"\$@\"
-    docker run --name \$container_name --rm $TAGGED_IMG \$cmd_args
-}
-"
-
-USERS="root core"
-echo "$0 INFO: creating alias '$CMD' in \$HOME/.alias dir for users $USERS"
-
-for user in $USERS; do
-    home_dir=$(eval echo "~$user")
-    primary_group=$(id -gn $user)
-    alias_file=$home_dir/.alias/$IMG_NAME
-    echo "$ALIAS" > $alias_file
-done
-
-echo "$0 INFO: sourcing alias to test ..."
-
-shopt -s expand_aliases
-. $alias_file # sourcing the last alias file created ...
-
 if ! eval $VERIFY_CMD
 then
     echo "$0 ERROR: $CMD alias does not work ..."
     echo "          ... See ERROR messages above." >&2
     exit 1
 fi
+
+echo "$0 INFO: ... tagging image $TAG_VERSION as stable"
+docker tag $TAGGED_IMG $IMG_NAME:stable
 
 popd
 
