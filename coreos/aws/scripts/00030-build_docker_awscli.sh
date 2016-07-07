@@ -10,6 +10,8 @@
 # ... adds an alias to the .alias dir under core and
 #     root user's home dirs.
 #
+. /home/core/bin/functions
+
 CMD="aws" # the docker ENTRYPOINT or CMD
 IMG_NAME=awscli
 IMG_DIR=/tmp/uploads/docker/$IMG_NAME
@@ -36,7 +38,7 @@ fi
 
 if ! eval $VERIFY_CMD
 then
-    echo "$0 ERROR: $CMD alias does not work ..."
+    echo "$0 ERROR: $CMD does not work ..."
     echo "          ... See ERROR messages above." >&2
     exit 1
 fi
