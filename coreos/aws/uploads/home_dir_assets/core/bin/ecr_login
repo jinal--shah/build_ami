@@ -17,5 +17,5 @@ if [[ -e $DOCKER_CFG ]]; then
     mv $DOCKER_CFG $DOCKER_CFG.moved_by_ecr_login
 fi
 
-$(aws ecr_login ecr --region $AWS_DEFAULT_REGION get-login)
+$(aws ecr --region $AWS_DEFAULT_REGION get-login)
 

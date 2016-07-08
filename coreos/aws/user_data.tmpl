@@ -9,8 +9,8 @@ coreos:
     listen-peer-urls: http://$private_ipv4:2380
   units:
     - name: etcd2.service
-      command: disable
+      command: start
     - name: fleet.service
-      command: disable
+      command: start
   update:
     reboot-strategy: off
