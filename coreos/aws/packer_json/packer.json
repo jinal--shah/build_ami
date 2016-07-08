@@ -14,8 +14,7 @@
     "iam_instance_profile": "{{env `PACKER_IAM_INSTANCE_PROFILE`}}",
     "ssh_keypair_name": "{{env `SSH_KEYPAIR_NAME`}}",
     "ssh_private_key_file": "{{env `SSH_PRIVATE_KEY_FILE`}}",
-    "ssh_username": "{{env `SSH_USERNAME`}}",
-    "user_data_file": "{{env `USER_DATA_FILE`}}"
+    "ssh_username": "{{env `SSH_USERNAME`}}"
   },
   "builders": [
     {
@@ -44,8 +43,7 @@
         "build_time": "{{user `build_time`}}",
         "channel": "dev",
         "os_info": "{{user `aws_tag_os_info`}}"
-      },
-      "user_data_file": "build_ami/user_data_file"
+      }
     }
   ],
 
