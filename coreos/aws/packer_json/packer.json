@@ -43,7 +43,8 @@
         "build_time": "{{user `build_time`}}",
         "channel": "dev",
         "os_info": "{{user `aws_tag_os_info`}}"
-      }
+      },
+      "user_data_file": "build_ami/user_data_file"
     }
   ],
 
