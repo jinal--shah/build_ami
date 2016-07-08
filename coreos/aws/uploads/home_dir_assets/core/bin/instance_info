@@ -9,6 +9,11 @@
 # i.e. we're not interested in those metadata or tag values
 # that are subject to change during the lifestyle of the instance.
 #
+if ! . ~/bin/functions >/dev/null 2>&1
+then
+    echo "$0 ERROR: couldn't source custom shell functions [~/bin/functions]"
+    exit 1
+fi
 INFO_FILE=/etc/eurostar/instance_info
 TIMESTAMP="$(date +'%Y-%m-%d %H:%M:%S')"
 

@@ -1,12 +1,13 @@
 Description=Run awscli container to get credentials to access ECR
-After=docker.service,docker.socket
+After=docker.service docker.socket
+Requires=docker.service docker.socket
 
 [Service]
 Type=oneshot
+Environment="CONTAINER_NAME=ecr_login"
 ExecStartPre=-/usr/bin/docker kill ecr_login
 ExecStartPre=-/usr/bin/docker rm ecr_login
 ExecStart=/home/core/bin/ecr_login
-Requires=docker.service,docker.socket
 TimeoutSec=10
 User=core
 

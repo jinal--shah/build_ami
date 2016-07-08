@@ -11,4 +11,4 @@
 # ... ignore the assets from the build process
 **/*.gz
 **/*.swp
-
+**/user_data_file

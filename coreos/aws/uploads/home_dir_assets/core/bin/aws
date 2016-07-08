@@ -9,7 +9,7 @@
 # User can set CONTAINER_NAME env var to give docker container a unique
 # name (to avoid race conditions), or else default is applied.
 #
-if ! . ~/bin/functions
+if ! . ~/bin/functions >/dev/null 2>&1
 then
     echo "$0 ERROR: couldn't source custom shell functions [~/bin/functions]"
     exit 1

@@ -1,11 +1,12 @@
 [Unit]
 Description=Get instance info from ec2 metadata and tag api
-After=docker.service,docker.socket
+After=docker.service docker.socket
+Requires=docker.service docker.socket
 
 [Service]
 Type=oneshot
+Environment="CONTAINER_NAME=instance_info"
 ExecStart=/home/core/bin/instance_info
-Requires=docker.service,docker.socket
 TimeoutSec=15
 User=core
 
