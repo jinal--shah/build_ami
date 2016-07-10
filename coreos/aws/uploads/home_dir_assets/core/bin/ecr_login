@@ -17,5 +17,10 @@ if [[ -e $DOCKER_CFG ]]; then
     mv $DOCKER_CFG $DOCKER_CFG.moved_by_ecr_login
 fi
 
-$(aws ecr --region $AWS_DEFAULT_REGION get-login)
+# ... account doesn't need to be hardcoded
+# should be value retrieved from KMS or during build.
+for account in 018274991670; do
+    $(aws ecr --region $AWS_DEFAULT_REGION get-login --registry-ids $account)
+done
+
 
