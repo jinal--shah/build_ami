@@ -19,7 +19,7 @@ fi
 
 # ... account doesn't need to be hardcoded
 # should be value retrieved from KMS or during build.
-for account in 018274991670; do
+for account in 856038083336; do
     $(aws ecr --region $AWS_DEFAULT_REGION get-login --registry-ids $account)
 done
 
