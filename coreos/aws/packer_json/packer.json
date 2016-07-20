@@ -12,8 +12,6 @@
     "aws_tag_os_info": "{{env `AWS_TAG_OS_INFO`}}",
     "build_time": "{{env `BUILD_TIME`}}",
     "iam_instance_profile": "{{env `PACKER_IAM_INSTANCE_PROFILE`}}",
-    "ssh_keypair_name": "{{env `SSH_KEYPAIR_NAME`}}",
-    "ssh_private_key_file": "{{env `SSH_PRIVATE_KEY_FILE`}}",
     "ssh_username": "{{env `SSH_USERNAME`}}"
   },
   "builders": [
@@ -31,8 +29,6 @@
       }],
       "region": "{{user `aws_region`}}",
       "source_ami": "{{user `ami_source_id`}}",
-      "ssh_keypair_name": "{{user `ssh_keypair_name`}}",
-      "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
       "ssh_pty" : "true",
       "ssh_username": "{{user `ssh_username`}}",
       "tags": {
